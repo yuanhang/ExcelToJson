@@ -1,9 +1,34 @@
 require 'spreadsheet'
 
 class Event
-  def initialize keys, values  
-    if 1
+  def initialize values  
+    i = 0
+    @id = Integer(values[i]);
+    ++i
+    @content = values[i]
+    ++i
+    @strategy = convert_to_point values[i]
+    ++i
+    @product = convert_to_point values[i]
+    ++i
+    @tech = convert_to_point values[i]
+    ++i
+    @operation = convert_to_point values[i]
+    ++i
+    @fortune = convert_to_point values[i]
+    ++i
+    @range = values[i]
+    ++i
+    @reusable = values[i]
+    ++i
+    @comment = values[i]
+  end
 
+  def convert_to_point str
+    if String.empty?
+      return 0
+    else
+      return str.to_i
     end
   end
 end
@@ -19,8 +44,10 @@ keys = Array.new
 keys = sheet1.row(keys_row_index)
 puts keys
 rows = Array.new
+events = Array.new
 sheet1.each omit_rows do |row|
   rows << row
+  events << Event.new row
 end
 
 # Create output json file
@@ -41,4 +68,5 @@ end
 
 json_file << "]\n"
 json_file.close
+puts events
 
