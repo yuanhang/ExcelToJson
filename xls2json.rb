@@ -2,9 +2,9 @@ require 'spreadsheet'
 
 class Event
   #class << self
-    #attr_accessor :attributes
+  #attr_accessor :attributes
   #end
-  @@attributes = [:id, :content, :strategy, :product, :tech, :operation, :fortune, :range, :reusable, :comment]
+  @@attributes = [:id, :title, :content, :strategy, :product, :tech, :operation, :fortune, :range, :reusable, :comment]
   @@attributes.each { |attr| attr_accessor attr }
   def self.attributes
     @@attributes
@@ -16,7 +16,11 @@ class Event
     i = 0
     @id = values[i].to_i;
     i += 1
-    @content = values[i]
+    if (values[i] == nil)
+      puts @id
+    end
+    @title = values[i].split("\n")[0]
+    @content = values[i].split("\n")[1]
     i += 1
     @strategy = values[i].to_i
     i += 1
@@ -36,11 +40,12 @@ class Event
   end
 
   def to_json
-    json_str = "{"
-    @@attributes.each do |key|
-      json_str += "\"#{key}\":\"#{value_for_key(key)}\","
+    json_str = ""
+    @@attributes.each_with_index do |key, i|
+      json_str += "\"#{key}\":\"#{value_for_key(key)}\""
+      json_str += "," unless i == @@attributes.size-1
     end
-    json_str += "},"
+    json_str
   end
 
 end
@@ -63,11 +68,13 @@ json_file_name = xls_file_name.split('.')[0] + '.json'
 File.delete(json_file_name) if File.exist?(json_file_name)
 
 json_file = File.open(json_file_name, 'w')
-json_file << "["
-events.each do |event|
-  json_file << event.to_json 
+json_file << "{\"events\":["
+events.each_with_index do |event, i|
+  json_str = "{#{event.to_json}}" 
+  json_str += "," unless i == events.size-1
+  json_file << json_str
 end
-json_file << "]"
+json_file << "]}"
 json_file.close
 puts events[0].to_json
 
