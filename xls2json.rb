@@ -39,11 +39,9 @@ class EventBag
     if @events.empty?
       @id = event.id
       @events << event
-      puts "new bag: #{event.id}"
     else
       if event.id == @id
         @events << event
-        puts "add to bag: #{event.id}"
       end
     end
   end
@@ -52,7 +50,7 @@ class EventBag
     json_str = "{\"id\":\"#{@id}\","
     json_str += "\"events\":["
     events.each_with_index do |event, i|
-      json_str += "{#{event.to_json}}" 
+      json_str += event.to_json 
       json_str += "," unless i == events.size-1
     end
     json_str += "]}"
@@ -91,12 +89,12 @@ class Event
   end
 
   def to_json
-    json_str = ""
+    json_str = "{"
     @@attributes.each_with_index do |key, i|
       json_str += "\"#{key}\":\"#{value_for_key(key)}\""
       json_str += "," unless i == @@attributes.size-1
     end
-    json_str
+    json_str += "}"
   end
 
 end
