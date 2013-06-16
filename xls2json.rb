@@ -12,7 +12,6 @@ class Event
   def value_for_key key
     instance_variable_get "@#{key}"
   end
-  #attr_accessor :id, :content, :strategy, :product, :tech, :operation, :fortune, :range, :reusable, :comment
   def initialize values  
     i = 0
     @id = values[i].to_i;
@@ -44,13 +43,6 @@ class Event
     json_str += "},"
   end
 
-  def convert_to_point str
-    if str.empty?
-      return 0
-    else
-      str.to_i
-    end
-  end
 end
 
 xls_file_name = 'events.xls'
@@ -60,9 +52,7 @@ sheet1 = book.worksheet(0)
 
 omit_rows = 2
 keys_row_index = 1
-keys = Array.new
-keys = sheet1.row(keys_row_index)
-puts keys
+
 events = Array.new
 sheet1.each omit_rows do |row|
   events << Event.new(row)
