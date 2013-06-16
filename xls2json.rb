@@ -121,15 +121,5 @@ File.delete(json_file_name) if File.exist?(json_file_name)
 
 json_file = File.open(json_file_name, 'w')
 json_file << EventBagManager.instance.to_json
-#json_file << "{\"eventBags\":["
-#EventBagManager.instance.bags.each do |id, bag|
-#bag.events.each_with_index do |event, i|
-#json_str = "{#{event.to_json}}" 
-#json_str += "," unless i == events.size-1
-#json_file << json_str
-#end
-#break
-#end
-#json_file << "]}"
 json_file.close
 
