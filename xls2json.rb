@@ -107,7 +107,6 @@ book = Spreadsheet.open(xls_file_name)
 sheet1 = book.worksheet(0)
 
 omit_rows = 2
-keys_row_index = 1
 sheet1.each omit_rows do |row|
   EventBagManager.instance.add_event(Event.new(row))
 end
