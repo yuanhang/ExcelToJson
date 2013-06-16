@@ -108,9 +108,6 @@ sheet1 = book.worksheet(0)
 
 omit_rows = 2
 keys_row_index = 1
-
-events = Array.new
-
 sheet1.each omit_rows do |row|
   EventBagManager.instance.add_event(Event.new(row))
 end
@@ -118,7 +115,6 @@ end
 # Create output json file
 json_file_name = xls_file_name.split('.')[0] + '.json'
 File.delete(json_file_name) if File.exist?(json_file_name)
-
 json_file = File.open(json_file_name, 'w')
 json_file << EventBagManager.instance.to_json
 json_file.close
