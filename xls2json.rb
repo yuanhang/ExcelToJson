@@ -9,8 +9,8 @@ class Event
   def self.attributes
     @@attributes
   end
-  def key attr
-    instance_variable_get "@#{attr}"
+  def value_for_key key
+    instance_variable_get "@#{key}"
   end
   #attr_accessor :id, :content, :strategy, :product, :tech, :operation, :fortune, :range, :reusable, :comment
   def initialize values  
@@ -36,11 +36,19 @@ class Event
     @comment = values[i]
   end
 
+  def to_json
+    json_str = "{"
+    @@attributes.each do |key|
+      json_str += "\"#{key}\":\"#{value_for_key(key)}\","
+    end
+    json_str += "},"
+  end
+
   def convert_to_point str
     if str.empty?
       return 0
     else
-      return str.to_i
+      str.to_i
     end
   end
 end
@@ -55,12 +63,9 @@ keys_row_index = 1
 keys = Array.new
 keys = sheet1.row(keys_row_index)
 puts keys
-rows = Array.new
 events = Array.new
 sheet1.each omit_rows do |row|
-  rows << row;
   events << Event.new(row)
-  #puts events.last.to_s
 end
 
 # Create output json file
@@ -68,26 +73,11 @@ json_file_name = xls_file_name.split('.')[0] + '.json'
 File.delete(json_file_name) if File.exist?(json_file_name)
 
 json_file = File.open(json_file_name, 'w')
-json_file << "[\n"
-
-#rows.each_with_index do |row, index1|
-#json_file << "{\n"
-#Event.attributes.each_with_index do |key, index|
-#json_file << "#{key}:#{row[index]},\n"
-##puts row[index]
-#end
-#json_file << "},\n"
-#end
-events.each_with_index do |event, index1|
-  json_file << "{\n"
-  Event.attributes.each_with_index do |key, index|
-    json_file << "#{key}:#{event.key(key)},\n"
-    #puts row[index]
-  end
-  json_file << "},\n"
+json_file << "["
+events.each do |event|
+  json_file << event.to_json 
 end
-
-json_file << "]\n"
+json_file << "]"
 json_file.close
-puts events.to_s
+puts events[0].to_json
 
